@@ -9,6 +9,7 @@ import { errorByStatusCode } from 'gov/status_codes';
 import "lib/utils"; // _
 import {isMobile} from "gov/detector";
 
+
 $(document).ready(function() {
     var $body = $(document.body);
 
