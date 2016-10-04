@@ -1,16 +1,59 @@
 /*jslint esversion: 6, -W097, browser: true */
-/*global $: true, console: true, _ */
+/*global $: true, console: true */
 
 'use strict';
 
-import { notificationCenter } from "../main";
-import { currentLanguage } from 'config';
-import { errorByStatusCode } from 'gov/status_codes';
-import "lib/utils"; // _
-import {isMobile} from "gov/detector";
+import {isMobile} from "stm-detector";
 
+export function errorByStatusCode(_, statusCode) {
+    try {
+        statusCode = parseInt(statusCode, 10);
+    } catch (e) {}
 
-$(document).ready(function() {
+    var message;
+    switch (statusCode) {
+        case 400:
+            message = _('Неверный запрос');
+            break;
+        case 403:
+            message = _('Отказано в доступе');
+            break;
+        case 404:
+            message = _('Не найдено');
+            break;
+        case 405:
+            message = _('Метод не поддерживается');
+            break;
+        case 413:
+            message = _('Размер запроса превышает максимальный допустимый');
+            break;
+        case 429:
+            message = _('Слишком много запросов');
+            break;
+        case 500:
+            message = _('Внутренняя ошибка сервера');
+            break;
+        case 502:
+            message = _('Неверный шлюз');
+            break;
+        case 503:
+            message = _('Сервис недоступен');
+            break;
+        case 504:
+            message = _('Шлюз не отвечает');
+            break;
+    }
+    return message;
+}
+
+export function setUpErrors(options) {
+
+    var notificationCenter = options.notificationCenter || {notify: alert};
+    var _ = options.gettext || nullTranslation;
+    var language = options.language || 'en';
+    var pathTemplate = options.pathTemplate || '/static/{LANG}/{STATUS}.html';
+    var show404Page = options.show404Page == undefined ? true : options.show404Page;
+
     var $body = $(document.body);
 
     var willUnload = false;
@@ -34,8 +77,8 @@ $(document).ready(function() {
                 break;
             default:
                 console.log('An error with XHR', e, xhr, options, error);
-                let message = errorByStatusCode(xhr.status) ||  _('Ошибка загрузки');
-                if (xhr.status === 404) {
+                let message = errorByStatusCode(_, xhr.status) ||  _('Ошибка загрузки');
+                if (xhr.status === 404 && show404Page) {
                     showErrorModal();
                 } else {
                     notificationCenter.notify(message + ' ' + $.url().attr('base') + (xhr.url || options.url));
@@ -72,7 +115,7 @@ $(document).ready(function() {
     var loadedErrorDialogData = null;
 
     function _preloadErrorDialog(callback) {
-        var url = (window.config ? window.config.staticUrl : '/static/') + currentLanguage + '/404.html';
+        var url = pathTemplate.replace('{LANG}', language).replace('{STATUS}', '404');
         if (!loadedErrorDialogData) {
             // Since it is an error page with status 404 we use 'always'.
             $.get(url).always(function(data) {
@@ -85,7 +128,7 @@ $(document).ready(function() {
             callback(loadedErrorDialogData);
         }
     }
+}
 
 
-
-});
+function nullTranslation(x) { return x; }
