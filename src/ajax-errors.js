@@ -4,6 +4,8 @@
 'use strict';
 
 import {isMobile} from "stm-detector";
+var $ = require('jquery');
+
 
 export function errorByStatusCode(_, statusCode) {
     try {
