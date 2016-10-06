@@ -24,21 +24,22 @@ var locales = {
         },
         timeout: 'Превышено время ожидания ответа'
     },
-    en:
-    {
-        400: 'Bad Request',
-        403: 'Forbidden',
-        404: 'Not found',
-        405: 'Method Not Allowed',
-        413: 'Request Entity Too Large',
-        429: 'Too Many Requests',
-        500: 'Internal Server Error',
-        502: 'Bad Gateway',
-        503: 'Service Unavailable',
-        504: 'Gateway Timeout',
-        "default": 'Error while loading'
-    },
-    timeout: 'The connection has timed out'
+    en: {
+        errors: {
+            400: 'Bad Request',
+            403: 'Forbidden',
+            404: 'Not found',
+            405: 'Method Not Allowed',
+            413: 'Request Entity Too Large',
+            429: 'Too Many Requests',
+            500: 'Internal Server Error',
+            502: 'Bad Gateway',
+            503: 'Service Unavailable',
+            504: 'Gateway Timeout',
+            "default": 'Error while loading'
+        },
+        timeout: 'The connection has timed out'
+    }
 }
 
 
@@ -49,7 +50,7 @@ export function errorByStatusCode(statusCode) {
     } catch (e) {}
 
     var errors = locales[language].errors;
-    return [statusCode + ''] || errors["default"];
+    return errors[statusCode + ''] || errors["default"];
 }
 
 export function setUpErrors(options) {
