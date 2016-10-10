@@ -1,5 +1,5 @@
 /*jslint esversion: 6, -W097, browser: true */
-/*global console: true */
+/*global require, console: true */
 
 'use strict';
 
@@ -40,7 +40,7 @@ var locales = {
         },
         timeout: 'The connection has timed out'
     }
-}
+};
 
 
 export function errorByStatusCode(statusCode) {
@@ -55,9 +55,9 @@ export function errorByStatusCode(statusCode) {
 
 export function setUpErrors(options) {
 
-    var notificationCenter = options.notificationCenter || {notify: alert};
+    var notificationCenter = options.notificationCenter || {notify: window.alert};
     var pathTemplate = options.pathTemplate || '/static/{LANG}/{STATUS}.html';
-    var show404Page = options.show404Page == undefined ? true : options.show404Page;
+    var show404Page = options.show404Page === undefined ? true : options.show404Page;
 
     var language = $('html').prop('lang') || 'en';
     language = language.split('_')[0];
