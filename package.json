@@ -1,6 +1,6 @@
 {
   "name": "stm-ajax-errors",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Display error on AJAX request",
   "main": "lib/ajax-errors.js",
   "scripts": {
